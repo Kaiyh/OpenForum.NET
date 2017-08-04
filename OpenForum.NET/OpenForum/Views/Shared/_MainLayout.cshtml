@@ -1,0 +1,418 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title OpenForum.NET论坛</title>
+    <style type="text/css">
+        html,body {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 导航栏样式 */
+        .my-navbar {
+            background: #fdfdfd;
+            padding: 14px 0;
+            transition: background 0.1s ease-in-out, padding 0.1s ease-in-out;
+        }
+        .my-navbar a {
+            transition: color 0.1s ease-in-out;
+        }
+        .my-navbar a:hover {
+            /*border-bottom: 2px solid #4f64dc;*/
+            background: transparent;
+            outline: 0;
+        }
+        #nav-brand {
+            /*'Adobe Fangsong Std'*/
+            font-family: 'Adobe Caslon Pro';
+            font-size: 24px;
+            font-weight: 600;
+            color: #4f64dc;
+        }
+        #nav-list {
+             margin-left:150px;
+        }
+        #nav-list ul li a {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #555555;
+        }
+        .box-shadow {
+            box-shadow: 0 2px 2px #eeeeee;
+            -moz-box-shadow: 0 2px 2px #eeeeee;
+            -webkit-box-shadow: 0 2px 2px #eeeeee;
+        }
+        .actived {/*当前导航条被选中字体变色*/
+            color: #4f64dc;
+        }
+        .noactive { }
+
+
+        /* 尾部样式 */
+        #foot {
+            width: 100%;
+            height: 320px;
+            margin-top: 280px;
+            padding: 20px;
+            color: white;
+            background-color: #292929;
+        }
+        #foot-content div h5 {
+            margin-bottom: 15px;
+        }
+        #foot-content div a {
+            line-height: 22px;
+            text-decoration: none;
+            font-size: 13px;
+            color: #a9a9a9;
+        }
+        #foot-content div img {
+            margin-top: 28px;
+            margin-bottom: 28px;
+            margin-left: 75px;
+            text-align: center;
+        }
+        #foot-copy {
+            margin-top: 33px;
+        }
+
+        /* 登录注册模态框的样式 */
+        .login-title {
+            font-size: 18px;
+            color: #777777;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    @{
+        AjaxOptions opts = new AjaxOptions {
+            UpdateTargetId = "content"
+        };
+    }
+
+    @Styles.Render("~/Content/themes/base/jqueryui")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
+    @Scripts.Render("~/bundles/jquery-unobtrusive-ajax")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+
+<body><!-- data-spy="scroll" data-target=".body-content"   添加滚动监听-->
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++++头部导航栏-->
+    <nav class="navbar my-navbar" role="navigation"
+         style="margin-top: -50px; 
+         border-top: 3px solid #4f64dc; 
+         border-bottom: 1px #747474; 
+         box-shadow: 0 1px 2px 1px #dedede;
+         margin-bottom: 38px">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#example-navbar-collapse">
+                    <span class="sr-only">导航栏</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="nav-brand" class="navbar-brand" href="@Url.Action("MainIndex", "Home")">OpenForum.NET</a>
+            </div>
+            <div class="collapse navbar-collapse" id="nav-list">
+                <ul class="nav navbar-nav" id="nav-ul">
+                    <li>@Ajax.ActionLink("问答", "MainIndex", "Home", opts, new {
+                       @class = "a"
+                   })</li>
+                    <li>@Ajax.ActionLink("专栏", "SpecialColumn", "Home", opts, new {
+                       @class = "a"
+                   })</li>
+                    <li>@Ajax.ActionLink("板块", "Modules", "Home", opts, new {
+                        @class = "a"
+                    })</li>
+                    <li>@Ajax.ActionLink("用户", "Users", "Home", opts, new {
+                       @class = "a"
+                   })</li>
+                </ul>
+
+                <!--搜索框-->
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" style="width:220px" placeholder="搜索问题或关键字">
+                    </div>
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </form>
+
+                @{
+                            var userID = Session["userID"];
+                            if (userID == null) {
+                <!--未登录-->  <!--产生一个模态框-->
+                        <button type="button" class="btn btn-primary navbar-btn navbar-right"
+                                data-toggle="modal" data-target=".bs-example-modal-lg">
+                            免费注册
+                        </button>
+                        <a href="#" class="navbar-text navbar-right text-primary" style="margin-right:20px"
+                           data-toggle="modal" data-target=".bs-example-modal-lg">
+                            立即登录
+                        </a>
+                    } else {
+                <!--已登录-->
+                        <div class="btn-group navbar-btn navbar-right">
+                            <button type="button" class="btn btn-primary dropdown-toggle" style="width: 80px" data-toggle="dropdown">
+                                <span>@userID</span>
+                                <span class="caret" style="margin-left: 20px"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>@Ajax.ActionLink("个人主页", "Users", "Home", opts, new {
+                                   @class = "a"
+                               })</li>
+                                @*<li>@Ajax.ActionLink("我的问答", "Users", "Home", opts, new {
+                                   @class = "a"
+                               })</li>*@
+                                <li>@Ajax.ActionLink("退出登录", "Logout", "Home", opts, new {
+                                   @class = "a"
+                               })</li>
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++++登录、注册界面 模态框-->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" 
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"
+             style="height:auto; width: 900px;"><!--修改了模态框宽度、内边距-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">登录</h4>
+                </div>
+                <div class="modal-body" style="margin: 31px auto;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-1">
+                                <!--登录表单: bootstrap标准写法-->
+                                <p class="login-title">用户登录</p>
+                                <form class="form-horizontal" role="form" method="post" action="@Url.Action("Login", "User")">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="username" class="form-control" id="username" placeholder="请输入用户名">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="password" name="password" class="form-control" id="password" placeholder="请输入密码">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox">记住密码
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-offset-2 col-sm-3">
+                                            <button type="submit" class="btn btn-primary">登录</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-top: 20px;">
+                                        <div class="col-sm-12">
+                                            <p>快速登录&nbsp;&nbsp;<a href="#"><span class="glyphicon glyphicon-check"></span></a></p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!--竖直分割线-->
+                            <div class="col-sm-1" style="height: 230px;">
+                                <hr style="float: right;
+                                       height: 100%;
+                                       margin-top: 10px 0;
+                                       border: 1px solid #eeeeee;">
+                            </div>
+
+                            <div class="col-sm-4 col-sm-offset-1">
+                                <!--注册表单: bootstrap标准写法-->
+                                <p class="login-title">注册新用户</p>
+                                <form class="form-horizontal" role="form"  method="post" action="@Url.Action("Register", "User")">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="newuser" class="form-control" id="newuser" placeholder="新用户名">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="password" name="newpsw" class="form-control" id="newpsw" placeholder="您的密码">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="password" class="form-control" id="repetpsw" placeholder="确认密码">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="email" class="form-control" id="email" placeholder="电子邮箱">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <label>
+                                                同意并接受<span style="color: #4f64dc">《服务条款》</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-offset- col-sm-3">
+                                            <button type="submit" class="btn btn-primary">注册</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++++主体内容-->
+    <div class="container body-content" id="content" @*style="height: 700px;"*@>
+        @RenderBody()
+    </div>
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++++尾部-->
+    <footer id="foot">
+        <div class="container">
+            <div class="row" id="foot-content">
+                <div class="col-md-3">
+                    <h5>网站相关</h5>
+                    <a href="#">服务条款</a><br />
+                    <a href="#">帮助中心</a><br />
+                    <a href="#">声望与权限</a><br />
+                    <a href="#">编辑器语法</a><br />
+                    <a href="#">每周精选</a><br />
+                    <a href="#">App 下载</a><br />
+                    <a href="#">社区服务中心</a>
+                </div>
+                <div class="col-md-3">
+                    <h5>关于我们</h5>
+                    <a href="#">开发团队</a><br />
+                    <a href="#">项目技术</a><br />
+                    <a href="#">合作伙伴</a><br />
+                    <a href="#">媒体报道</a><br />
+                    <a href="#">建议反馈</a>
+                </div>
+                <div class="col-md-3">
+                    <h5>友情链接</h5>
+                    <a href="https://www.henu.edu.cn">河南大学</a><br />
+                    <a href="https://cs.henu.edu.cn">河南大学计算机与信息工程学院</a><br />
+                    <a href="https://www.henu.edu.cn">河南大学教务处</a><br />
+                    <a href="https://www.henu.edu.cn">河南大学教务系统</a><br />
+                    <a href="https://www.henu.edu.cn">学生信息中心</a><br />
+                    <a href="https://www.henu.edu.cn">四六级报名</a><br />
+                    <a href="https://www.henu.edu.cn">我要学英语</a>
+                </div>
+                <div class="col-md-3">
+                    <img src="~/images/wechat.jpg" width="110"/>
+                    <p class="text-center">微信扫一扫，支持网站的开发和维护</p>
+                    <p class="text-center">您的打赏与鼓励，是我们继续研发的动力</p>
+                </div>
+            </div>
+            <div class="row" id="foot-copy">
+                <div class="col-md-4 col-md-offset-4">
+                    <p>Copyright &copy;@DateTime.Now.Year - OpenForum.NET  当前版本: 1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++++表单验证、滚动监听-->
+    <script>
+        $(function () {
+            // 滚动监听......(not)
+            //$('body').scrollspy({ target: '.body-content' })
+
+            //// 判断content的高度(最小为500px)
+            //if ($(document).height() < 800) {
+            //    $(document).height(800);
+            //}
+
+            // 选中的导航条变色....(not)
+            $('#nav-ul li').click(function () {
+                var f = this;
+                $('#nav-ul li').each(function () { this.className = this == f ? 'actived' : 'noactive' });
+            });
+
+
+            // 登录注册表单验证
+            $('form :input').blur(function () {
+                var $parent = $(this).parent();
+                $parent.find(".formtips").remove();
+                //验证用户名
+                if ($(this).is('#newuser, #username')) {
+                    if (this.value == "" || this.value.length < 2) {
+                        var errorMsg = '用户名长度至少2位.';
+                        $parent.append('<span class="formtips onError" style="color: red; font-size: 13px;">' + errorMsg + '</span>');
+                    } else {
+                        var okMsg = '输入正确.';
+                        //$parent.append('<span class="formtips onSuccess">' + okMsg + '</span>');
+                    }
+                }
+                //验证密码
+                if ($(this).is('#newpsw, #password')) {
+                    if (this.value == "" || this.value.length < 6) {
+                        var errorMsg = '密码长度至少6位.';
+                        $parent.append('<span class="formtips onError" style="color: red; font-size: 13px;">' + errorMsg + '</span>');
+                    } else {
+                        var okMsg = '输入正确.';
+                        //$parent.append('<span class="formtips onSuccess">' + okMsg + '</span>');
+                    }
+                }
+                //验证重新输入的密码
+                if ($(this).is('#repetpsw')) {
+                    if (this.value == "" || this.value.length < 6) {
+                        var errorMsg = '密码长度至少6位.';
+                        $parent.append('<span class="formtips onError" style="color: red; font-size: 13px;">' + errorMsg + '</span>');
+                    } else if (this.value != $('#newpsw').value) {
+                        var errorMsg = '密码不一致.';
+                        $parent.append('<span class="formtips onError" style="color: red; font-size: 13px;">' + errorMsg + '</span>');
+                    } else {
+                        var okMsg = '输入正确.';
+                        //$parent.append('<span class="formtips onSuccess">' + okMsg + '</span>');
+                    }
+                }
+                //验证邮件(把Razor语法的'At'符号去掉，只需在前面再加一个'At')
+                if ($(this).is('#email')) {
+                    if (this.value == "" || (this.value != "" && !/.+@@.+\.[a-zA-Z]{2,4}$/.test(this.value))) {
+                        var errorMsg = '请输入正确的E-Mail地址.';
+                        $parent.append('<span class="formtips onError" style="color: red; font-size: 13px;">' + errorMsg + '</span>');
+                    } else {
+                        var okMsg = '输入正确.';
+                        //$parent.append('<span class="formtips onSuccess">' + okMsg + '</span>');
+                    }
+                }
+            }).keyup(function () {
+                $(this).triggerHandler("blur");
+            });//end blur
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,359 @@
+﻿@model Tuple<OpenForum.Models.UserInfo, List<OpenForum.Models.Question> >
+
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<script>
+    //$(function () {
+    //    $('#myTab a:first').tab('show')
+    //})
+</script>
+
+<style>
+    /*Part I: 个人主页-相关样式*/
+    .info-box {
+        height: 245px;
+        background-color: #f3f3f3;
+        border-radius: 8px;
+    }
+    .info .row {
+        height: 100%;
+    }
+    .info .row .col-md-3, .col-md-9 {
+        height: 85%;
+        padding: 10px;
+    }
+    .info-img img {
+        width: 160px;
+        height: 160px;
+        margin-top: 10px;
+        margin-left: 60px;
+        border-radius: 80px;
+    }
+    .info-img div {
+        margin-left: 88px;
+        margin-top: 22px;
+    }
+    .info-img div span {
+        margin-left: 5px;
+    }
+    .info-data {
+        margin-top: 30px;
+    }
+    .info-data div {
+        height: 100%;
+        margin: 0 auto;
+        padding: 10px;
+        /*background-color: #777777;*/
+    }
+    .detail {
+        margin-top: 11px;
+    }
+    .detail-left {
+         height: 80%;
+         border-radius: 10px;
+         background-color: #f3f3f3;
+    }
+
+
+    /*Part II: 用户帖子-相关样式*/
+    .que-box {
+        height: 120px;
+        padding: 5px 10px;
+        border-bottom: 1px solid #dddddd;
+    }
+    .que-box:hover {
+        background-color: #f1f7fd;
+    }
+    .que-box-left {
+        height: 50px;
+        width: 50px;
+        /*background-color: #77aaee;*/
+        color: #77aaee;
+        border: 1px solid #77aaee;
+        margin: 30px 20px;
+        float: left;
+    }
+    .que-box-right {
+        height: 100%;
+        width: 1000px;
+        float: left;
+        /*background-color: #77aaee;*/
+    }
+    .que-draw {
+        font-size: 18px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        margin-top: 30px;
+    }
+    .que-info {
+        padding: 10px 0;
+    }
+    .que-info .div1 {
+        height: 100%;
+        width: 100px;
+        font-size: 13px;
+        text-align: center;
+        margin-right: 70px;
+        color: #444444;
+        /*background-color: #77aaee;*/
+        border: 1px solid #77aaee;
+        border-radius: 3px;
+        float: right;
+    }
+    .que-info .div1 a {
+        text-decoration: none;
+    }
+    .que-info .div2 span {
+        font-size: 13px;
+        border-radius: 2px;
+        color: #5c071c;
+        background-color: #eaedf6
+    }
+
+
+    /*Part III: 所有用户展示*/
+    .box-row {
+        height: 140px;
+        width: 100%;
+    }
+
+    .box-user {
+        height: 95%;
+        padding: 12px; /*内部信息不挨着边框*/
+        border-left: 3px solid #77aaee;
+    }
+
+    .box-user:hover {
+        background-color: #f1f7fd;
+    }
+
+    .box-user .div1 {
+        float: left;
+    }
+
+    .box-user .div1 img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+    }
+
+    .box-user .div2 {
+        padding: 6%;
+        float: left;
+    }
+</style>
+
+
+<!--导航元素-->
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active"><a href="#info" data-toggle="tab">个人主页</a></li>
+    <li><a href="#question" data-toggle="tab">我的问答</a></li>
+    @*<li><a href="#popular" data-toggle="tab">活跃用户</a></li>*@
+</ul>
+
+
+<!--导航内容-->
+<div id="myTabContent" class="tab-content"  style="margin-top: 20px;">
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++用户主页-->
+    <div id="info" class="tab-pane fade  in active">
+        @{
+            if (Session["userID"] == null) {
+                <p>温馨提示：您还未登录...</p>
+            } else {
+                <!--用户基本信息-->
+                <div class="container info-box">
+                    <div class="row">
+                        <div class="col-md-3 info-img">
+                            <img src="~/images/fav.png" />
+                            <div>
+                                <span class="glyphicon glyphicon-user"></span>
+                                <span class="glyphicon glyphicon-plus"></span>
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="glyphicon glyphicon-search"></span>
+                            </div>
+                        </div>
+                        <!--竖直分割线-->
+                        <div class="col-md-1" style="height: 199px;">
+                            <hr style="float: left;
+                               height: 100%;
+                               margin-top: 10px 0;
+                               border: 1px solid #e1e1e1;">
+                        </div>
+                        <div class="col-md-8 info-data">
+                            <h2>基本信息</h2>
+                            <table class="table">
+                                <tr>
+                                    <td>真实姓名：</td>
+                                    <td>@Model.Item1.name</td>
+                                    <td>性别：</td>
+                                    <td>@Model.Item1.sex</td>
+                                </tr>
+                                <tr>
+                                    <td>生日：</td>
+                                    <td>@Model.Item1.birthday</td>
+                                    <td>个人主页：</td>
+                                    <td>@Model.Item1.page</td>
+                                </tr>
+                                <tr>
+                                    <td>现居城市：</td>
+                                    <td>@Model.Item1.city</td>
+                                    <td>通讯地址：</td>
+                                    <td>@Model.Item1.address</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!--用户详细信息-->
+                <div class="container detail">
+                    <div class="row">
+                        <!--左侧的装饰-->
+                        <div class="col-md-3 detail-left">
+                            <pre style="border: none">
+        _ 
+       | |__ _ _ __ _ 
+       | '_ \| | | |/ _` |
+       | |_) | |_| | (_| |
+       |_.__/ \__,_|\__, |
+                    |___/ 
+       暂无更多信息...
+                    </pre>
+                        </div>
+
+                        <!--面板-->
+                        <div class="col-md-9">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">教育背景</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            毕业于：@Model.Item1.education
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">工作经历</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            曾就职于：@Model.Item1.work
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">个人技能</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            熟悉：
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+    </div>
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++用户的帖子...-->
+    <div id="question" class="tab-pane fade">
+        <div class="container">
+            @{
+                if (Session["userID"] == null) {
+                    <p>温馨提示：您还未登录...</p>
+                } else if (Model.Item2 == null) {
+                    <p>暂无问答+_+ 赶快去提问吧...</p>
+                } else {
+                    foreach (var v in Model.Item2) {
+                        string s = v.aID;
+                        int ans_tol = 0;
+                        if (s != null && s.Length > 0) {
+                            string[] sp = s.Split('+');
+                            ans_tol = sp.Length - 1;
+                        }
+            <!--++++++++每条帖子的显示设置-->
+                        <div class="row que-box">
+                            <div class="que-box-left text-center">
+                                @ans_tol <br />回答
+                            </div>
+                            <div class="que-box-right">
+                                <div class="que-draw">问题：@v.content</div>
+                                <div class="que-info">
+                                    <div class="div1">
+                                        @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                                    </div>
+                                    <div class="div2">
+                                        <span> @v.master </span>&nbsp;于&nbsp;
+                                        <span> @v.time </span>&nbsp;提问
+                                        <span style="margin-left: 30px"> @v.kind </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+
+
+
+
+    <!--+++++++++++++++++++++++++++++++++++++++++++++++++用户信息，按积分降序排序-->
+        @*
+        <div class="container">
+        @{
+            int tol_user = 8, cnt = 0;
+            for (int i = 0; i < tol_user / 3 + 1; i++) {
+                <div class="row box-row">
+                    @for (int j = 0; j < 3; j++) {
+                        cnt++;
+                        if (cnt > tol_user) {
+                            break;
+                        }
+                        <div class="col-md-4" style="height: 90%">
+                            <div class="box-user">
+                                <div class="div1">
+                                    <img src="~/images/fav.png" />
+                                </div>
+                                <!--从UserForum表读取的信息-->
+                                <div class="div2">
+                                    <table class="table">
+                                        <tr>
+                                            <td>用户：</td>
+                                            <td>xxx</td>
+                                        </tr>
+                                        <tr>
+                                            <td>积分：</td>
+                                            <td>xxx</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+        *@
+
+</div>

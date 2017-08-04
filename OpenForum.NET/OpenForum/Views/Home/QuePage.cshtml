@@ -1,0 +1,131 @@
+﻿@model Tuple<OpenForum.Models.Question, List<OpenForum.Models.Answer>>
+
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<style>
+    .box {
+        height: 180px;
+        padding: 5px 10px;
+        border: 1px solid #77aaee;
+    }
+    .que-box {
+        height: 180px;
+        padding: 5px 10px;
+        border-left: 1px solid #77aaee;
+        border-right: 1px solid #77aaee;
+        border-bottom: 1px solid #77aaee;
+    }
+    .que-box-left {
+        height: 40px;
+        width: 40px;
+        color: #77aaee;
+        border: 1px solid #77aaee;
+        margin: 30px 20px;
+        padding-top: 7px;
+        padding-left: 5px;
+        float: left;
+    }
+    .que-box-right {
+        height: 100%;
+        width: 1000px;
+        float: left;
+        /*background-color: #77aaee;*/
+    }
+    .que-draw {
+        font-size: 18px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        margin-top: 35px;
+    }
+    .que-info {
+        margin-top: 60px;
+    }
+    .que-info .div2 {
+        float: right;
+        margin-right: 30px;
+    }
+    .que-info .div2 span {
+        font-size: 13px;
+        border-radius: 2px;
+        color: #444444;
+        background-color: #eaedf6;
+    }
+</style>
+
+
+<div class="container" style="margin-top: 30px;">
+        <!--++++++++  ------------显示楼主的问题-->
+        <div class="row box">
+            <div class="que-box-left">
+                楼主
+            </div>
+            <div class="que-box-right">
+                <div class="que-draw">@Model.Item1.content</div>
+                <div class="que-info">
+                    <div class="div2">
+                        <span>@Model.Item1.master</span>&nbsp;&nbsp;于&nbsp;
+                        <span>@Model.Item1.time </span>&nbsp;&nbsp;提问
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @{
+            <!--++++++++  ------------显示每条回答-->
+            int floor = 0;
+            foreach (var v in Model.Item2) {
+                floor++;
+                <div class="row que-box">
+                    <div class="que-box-left">
+                        # @floor
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">@v.content</div>
+                        <div class="que-info">
+                            <div class="div2">
+                                <span>@v.solver</span>&nbsp;&nbsp;于&nbsp;
+                                <span>@v.solvertime</span>&nbsp;&nbsp;回答
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+</div>
+
+
+<!--++++++----------------++++++++++++++折叠面板-->
+@if (Session["userID"] != null) {
+    <div class="panel panel-primary" style="margin-top: 80px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion"
+                   href="#collapse1" style="text-decoration: none; width: 100%;">
+                    我要回答
+                </a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">
+                <!-- ++++++++++++++++++++++++++++++++++++++++  回答表单  -->
+                <form method="post" action="@Url.Action("Reply", "Home")" class="form-horizontal" role="form" style="margin-left: 25%;">
+                    <div style="display: none">
+                        <input name="qid" value="@Model.Item1.id" />
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2 ">
+                            <textarea class="form-control" name="content" rows="3" placeholder="输入您的回复"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-5 col-lg-5">
+                            <button type="submit" class="btn btn-default">提交</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+}

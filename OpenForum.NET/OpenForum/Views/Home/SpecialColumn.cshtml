@@ -1,0 +1,475 @@
+﻿@model List<OpenForum.Models.Question>
+
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<style>
+    /*Part II: 用户帖子-相关样式*/
+    .que-box {
+        height: 120px;
+        padding: 5px 10px;
+        border-bottom: 1px solid #dddddd;
+    }
+
+        .que-box:hover {
+            background-color: #f1f7fd;
+        }
+
+    .que-box-left {
+        height: 50px;
+        width: 50px;
+        /*background-color: #77aaee;*/
+        color: #77aaee;
+        border: 1px solid #77aaee;
+        margin: 30px 20px;
+        float: left;
+    }
+
+    .que-box-right {
+        height: 100%;
+        width: 1000px;
+        float: left;
+        /*background-color: #77aaee;*/
+    }
+
+    .que-draw {
+        font-size: 18px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        margin-top: 30px;
+    }
+
+    .que-info {
+        padding: 10px 0;
+    }
+
+        .que-info .div1 {
+            height: 100%;
+            width: 100px;
+            font-size: 13px;
+            text-align: center;
+            margin-right: 70px;
+            color: #444444;
+            /*background-color: #77aaee;*/
+            border: 1px solid #77aaee;
+            border-radius: 3px;
+            float: right;
+        }
+        .que-info .div1 a {
+            text-decoration: none;
+        }
+
+        .que-info .div2 span {
+            font-size: 13px;
+            border-radius: 2px;
+            color: #444444;
+            background-color: #eaedf6
+        }
+</style>
+
+
+
+<!--导航元素-->
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active"><a href="#cpp" data-toggle="tab">C/C++</a></li>
+    <li><a href="#java" data-toggle="tab">Java</a></li>
+    <li><a href="#cs" data-toggle="tab">C#</a></li>
+    <li><a href="#html" data-toggle="tab">HTML5</a></li>
+    <li><a href="#css" data-toggle="tab">CSS3</a></li>
+    <li><a href="#js" data-toggle="tab">JavaScript</a></li>
+    <li><a href="#vim" data-toggle="tab">Vim</a></li>
+    <li><a href="#git" data-toggle="tab">Git</a></li>
+</ul>
+
+<!--导航内容-->
+<div id="myTabContent" class="tab-content"  style="margin-top: 20px;">
+    <!--1、++++++++++++++++++++++++++++++++++++  C/C++  -->
+    <div id="cpp" class="tab-pane fade in active">
+        @{
+            int len = Model.Count;
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "C/C++") {
+                    continue;// 此模块为"C/C++"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!--2、++++++++++++++++++++++++++++++++++++  Java  -->
+    <div id="java" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "Java") {
+                    continue;// 此模块为"Java"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!--3、++++++++++++++++++++++++++++++++++++   C#  -->
+    <div id="cs" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "C#") {
+                    continue;// 此模块为"C#"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++   HTML   -->
+    <div id="html" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "HTML") {
+                    continue;// 此模块为"HTML"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++   CSS   -->
+    <div id="css" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "CSS") {
+                    continue;// 此模块为"CSS"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++   JavaScript   -->
+    <div id="js" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "JavaScript") {
+                    continue;// 此模块为"JavaScript"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++   Vim  -->
+    <div id="vim" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "Vim") {
+                    continue;// 此模块为"Vim"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++   Git  -->
+    <div id="git" class="tab-pane fade">
+        @{
+            for (int i = len - 1; i >= 0; i--) {
+                OpenForum.Models.Question v = Model[i];
+                if (v.kind != "Git") {
+                    continue;// 此模块为"Git"
+                }
+                string s = v.aID;
+                int ans_tol = 0;
+                if (s != null && s.Length > 0) {
+                    string[] sp = s.Split('+');
+                    ans_tol = sp.Length - 1;
+                }
+            <!--++++++++每条帖子的显示设置-->
+                <div class="row que-box">
+                    <div class="que-box-left text-center">
+                        @ans_tol <br />回答
+                    </div>
+                    <div class="que-box-right">
+                        <div class="que-draw">问题：@v.content</div>
+                        <div class="que-info">
+                            <div class="div1">
+                                @Html.ActionLink("点击查看", "QuePage", "Home", new {
+                           id = @v.id
+                       }, new {
+                           @class = "a"
+                       }) &rarr;
+                            </div>
+                            <div class="div2">
+                                <span> @v.master </span>&nbsp;&nbsp;于&nbsp;&nbsp;
+                                <span> @v.time </span>&nbsp;&nbsp;提问
+                                <span style="margin-left: 30px"> @v.kind </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>
+<script>
+    $(function () {
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+    });
+</script>
+
+
+
+
+
+<!--++++++----------------++++++++++++++折叠面板-->
+@if (Session["userID"] != null) {
+    <div class="panel panel-primary" style="margin-top: 80px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion"
+                   href="#collapse1" style="text-decoration: none; width: 100%;">
+                    我要提问
+                </a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">
+                <!-- ++++++++++++++++++++++++++++++++++++++++ 提问表单-->
+                <form method="post" action="@Url.Action("Ask", "Home")" class="form-horizontal" role="form" style="margin-left: 25%;">
+                    <div class="form-group">
+                        <label for="lastname" class="col-lg-2 control-label">问题种类</label>
+                        <div class="col-lg-10">
+                            <select class="combobox form-control" name="kind">
+                                <option value="C/C++">C/C++</option>
+                                <option value="Java">Java</option>
+                                <option value="C#">C#</option>
+                                <option value="HTML">HTML</option>
+                                <option value="CSS">CSS</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="Vim">Vim</option>
+                                <option value="Git">Git</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-lg-2 control-label">问题描述</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" name="content" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button type="submit" class="btn btn-default">提交</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+}
